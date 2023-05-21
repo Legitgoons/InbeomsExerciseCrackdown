@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import SignInForm from '../../components/Auth/SignInForm';
 
-export default class LoginPage extends Component {
-  render() {
-    return (
-      <div>LoginPage</div>
-    )
-  }
+const LoginPage = () => {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <SignInForm />
+    </div>
+  );
 }
+
+export default LoginPage

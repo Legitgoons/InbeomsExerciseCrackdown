@@ -1,9 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
+import SignUpForm from '../../components/Auth/SignUpForm';
 
-export default class RegisterPage extends Component {
-  render() {
-    return (
-      <div>RegisterPage</div>
-    )
-  }
+const RegisterPage = () => {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <SignUpForm />
+    </div>
+  );
 }
+
+export default RegisterPage
