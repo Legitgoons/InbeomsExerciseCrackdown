@@ -86,7 +86,7 @@ const SignUpForm = (
                 required: "비밀번호는 필수 입력입니다.",
                 minLength: {
                   value: 8,
-                  message: "8자리 이상 비밀번호를 사용하세요.",
+                  message: "8자리 이상의 비밀번호를 사용하세요.",
                 },
               })}
             />

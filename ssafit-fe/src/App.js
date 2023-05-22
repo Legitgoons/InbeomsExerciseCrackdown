@@ -21,7 +21,7 @@ function App() {
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/friends/*" element={<FriendsPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/worksout" element={<WorksoutPage />} />
+        <Route path="/worksout/*" element={<WorksoutPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

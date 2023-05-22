@@ -1,15 +1,20 @@
-import React from "react";
-import Calendar from "../Calendar/Calendar";
+import React, { useState } from "react";
+import WorksoutPlanExercise from "./WorksoutPlanExercise";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-const WorksoutPlan = () => {
+const WorkoutPlan = () => {
+  const [startDate, setStartDate] = useState(new Date());
+
   return (
-    <div className="w-screen flex justify-center">
-      <div className="w-4/5 flex items-center justify-evenly mt-40">
-        <Calendar />
-        <h1>여기 운동 등록</h1>
-      </div>
+    <div className="w-1/2 flex">
+      <DatePicker
+        selected={startDate}
+        onChange={(date) => setStartDate(date)}
+      />
+      <WorksoutPlanExercise />
     </div>
   );
 };
 
-export default WorksoutPlan;
+export default WorkoutPlan;
