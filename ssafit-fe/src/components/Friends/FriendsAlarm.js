@@ -27,7 +27,7 @@ const FriendsAlarm = () => {
   const renderActionButtons = (friend) => {
     if (friend.type === 1) {
       return (
-        <div >
+        <div>
           <Button className="mr-2" color="green" size="sm">
             수락
           </Button>
@@ -44,8 +44,8 @@ const FriendsAlarm = () => {
     <Card className="p-4 w-192">
       <List className="space-y-2">
         {friend.map((friend) => (
-          <ListItem key={friend.id} className="flex items-center justify-between">
-            <span>{renderMessage(friend)}</span>
+          <ListItem key={friend.id} className="flex flex-col items-center justify-between">
+            <span className="mb-2">{renderMessage(friend)}</span>
             {renderActionButtons(friend)}
           </ListItem>
         ))}

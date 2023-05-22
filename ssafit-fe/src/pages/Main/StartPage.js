@@ -8,7 +8,7 @@ const StartPage = () => {
   const timeout = () => {
     setTimeout(() => {
       navigate("/main");
-    }, 2000);
+    }, 5000);
   };
   useEffect(() => {
     timeout();
