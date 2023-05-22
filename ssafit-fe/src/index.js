@@ -4,17 +4,15 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import Header from "./components/Header/Header";
 import { ThemeProvider } from "@material-tailwind/react";
-<script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
+<script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <ThemeProvider>
-      <Header />
-      <App />
+      <ThemeProvider>
+        <App />
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>

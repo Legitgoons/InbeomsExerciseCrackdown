@@ -5,7 +5,7 @@ import Calendar from "../../components/Calendar/Calendar";
 
 const MainPage = () => {
   return (
-    <div className="flex items-center justify-evenly h-screen">
+    <div className="flex items-center justify-evenly mt-40">
       <div>
         <NavLink to="/calendar" className="mr-4">
           <Calendar />

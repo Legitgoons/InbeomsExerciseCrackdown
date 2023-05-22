@@ -1,9 +1,10 @@
 import React from 'react';
+import WorksoutPlan from "../../components/Worksout/WorksoutPlan";
 
 const WorksoutPage = () => {
     return (
         <div>
-            운동 기록할 페이지
+            <WorksoutPlan />
         </div>
     );
 };
