@@ -19,14 +19,16 @@ const StartPage = () => {
   return (
     <div className="h-screen">
       <div
-        className="h-4/5 flex pb-14 bg-right bg-cover"
+        className="h-screen flex justify-center pb-14 bg-right bg-cover"
         style={{ backgroundImage: `url(${InBeom})` }}
-      ></div>
-      <div className="flex justify-center">
+      >
         <h1 className="text-5xl font-bold text-sky-400/100">
           인범이의 운동단속 start Page
         </h1>
         <Spinner className="h-12 w-12" />
+      </div>
+      <div className="">
+        
       </div>
     </div>
   );

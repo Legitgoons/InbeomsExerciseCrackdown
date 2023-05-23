@@ -5,9 +5,10 @@ import {
   TabsBody,
   Tab,
   TabPanel,
+  Button,
 } from "@material-tailwind/react";
 
-const WorksoutPlanExercise = () => {
+const WorksoutPlanExercise = ({ onExerciseSelect, selectedExercise }) => {
   const exercises = [
     {
       part: "등",
@@ -63,8 +64,13 @@ const WorksoutPlanExercise = () => {
       ],
     },
   ];
+
+  const handleExerciseClick = (exerciseName) => {
+    onExerciseSelect(exerciseName);
+  };
+
   return (
-    <Tabs value="html" className="w-1/2">
+    <Tabs value="html" className="w-1/3">
       <TabsHeader
         className="bg-transparent"
         indicatorProps={{
@@ -79,9 +85,19 @@ const WorksoutPlanExercise = () => {
       </TabsHeader>
       <TabsBody>
         {exercises.map(({ part, exercise }) => (
-          <TabPanel key={part} value={part} className="flex flex-col">
+          <TabPanel
+            key={part}
+            value={part}
+            className="flex flex-col items-center"
+          >
             {exercise.map(({ id, name }) => (
-              <button key={id}>{name}</button>
+              <Button
+                key={id}
+                onClick={() => handleExerciseClick(name)}
+                className="w-1/2"
+              >
+                {name}
+              </Button>
             ))}
           </TabPanel>
         ))}
