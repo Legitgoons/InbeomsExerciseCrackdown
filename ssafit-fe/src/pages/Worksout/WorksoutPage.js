@@ -5,8 +5,8 @@ import WorksoutVideo from "../../components/Worksout/WorksoutPlanVideo";
 
 const WorksoutPage = () => {
   return (
-    <div className="w-screen flex justify-center">
-      <div className="w-4/5 flex items-center justify-evenly mt-28">
+    <div className="w-screen flex justify-evenly">
+      <div className="w-5/6 flex items-center justify-evenly mt-28">
         <WorksoutPlan />
       </div>
       <Routes>

@@ -1,39 +1,22 @@
 import React, { useState } from "react";
 import WorksoutPlanExercise from "./WorksoutPlanExercise";
+import WorksoutPlanExerciseTable from "./WorksoutPlanExerciseTable";
 import WorksoutPlanVideo from "./WorksoutPlanVideo";
-// import WortkoutPlanDate from "./WortkoutPlanDate";
-import {
-  Button,
-  Card,
-  Input,
-  Typography,
-  List,
-  ListItem,
-} from "@material-tailwind/react";
-// import { format } from "date-fns";
-// import { ko } from "date-fns/esm/locale";
+import { Button, Card, Input, Typography, } from "@material-tailwind/react";
 
-const WorkoutPlan = () => {
+const WorksoutPlan = () => {
   const [selectedExercise, setSelectedExercise] = useState("운동 선택");
   const [exerciseWeight, setExerciseWeight] = useState(0);
   const [exerciseReps, setExerciseReps] = useState(0);
   const [exerciseSet, setExerciseSet] = useState(0);
   const [fixedExercises, setFixedExercises] = useState([]); // 빈 배열로 초기화 -> 반복 가능
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
-  // const [selectedDate, setSelectedDate] = useState(new Date());
-
-  // const handleDateSelection = (date) => {
-  //   setSelectedDate(date);
-  // };
-  // const formatDate = (date) => {
-  //   return format(date, "yyyy.MM.dd (eee)", { locale: ko });
-  // };
 
   const handleExerciseSelection = (exerciseName) => {
     setSelectedExercise(exerciseName);
   };
 
-  const workoutChoiceHandler = () => {
+  const worksoutChoiceHandler = () => {
     if (selectedExercise === "운동 선택") {
       alert("운동을 선택해주세요");
       return;
@@ -94,14 +77,10 @@ const WorkoutPlan = () => {
   };
 
   return (
-    <div className="w-screen flex justify-between">
-      <div className="w-3/4 h-96 flex flex-col justify-between">
+    <div className="w-screen flex justify-evenly">
+      <div className="w-3/5 h-96 flex flex-col justify-between">
         <div className="flex justify-around">
           <div className="flex flex-col">
-            {/* <WortkoutPlanDate 
-            onDateSelect={handleDateSelection}
-            selectedDate={selectedDate}
-          /> 달력은 좀 더 고민해보는걸로,,*/}
           </div>
           <WorksoutPlanExercise
             onExerciseSelect={handleExerciseSelection}
@@ -113,7 +92,7 @@ const WorkoutPlan = () => {
             </Typography>
             <Input
               color="blue"
-              label="무게"
+              label="중량"
               value={exerciseWeight}
               onChange={(e) => setExerciseWeight(e.target.value)}
             />
@@ -129,45 +108,27 @@ const WorkoutPlan = () => {
               value={exerciseSet}
               onChange={(e) => setExerciseSet(e.target.value)}
             />
-            <Button color="gray" onClick={workoutChoiceHandler}>
+            <Button color="gray" onClick={worksoutChoiceHandler}>
               운동 선택
             </Button>
           </div>
         </div>
-        <div className="self-end w-2/3">
+        <div className="self-end w-3/4">
           <Card className="h-80 mt-10 flex flex-col justify-evenly">
             <WorksoutPlanVideo />
           </Card>
         </div>
       </div>
-      <div className="flex w-80 flex-col gap-6">
-        {/* <Typography variant="h5" color="blue-gray" className="self-center">
-            오늘 : {formatDate(selectedDate)}
-          </Typography> */}
-        <div className="flex flex-col justify-start">
-          <List>
-            <Typography>운동 목록</Typography>
-            {fixedExercises.map((exercise, index) => (
-              <ListItem key={index} variant="h5" color="blue-gray">
-                {exercise.name} - {exercise.weight}kg, {exercise.reps}회, {exercise.set}세트
-              </ListItem>
-            ))}
-          </List>
-        </div>
+      <div className="flex w-96 flex-col gap-6">
+        <WorksoutPlanExerciseTable fixedExercises={fixedExercises} />
         <div className="flex justify-evenly">
           {!isEditing ? (
             <Button onClick={handleEdit}>등록</Button>
           ) : (
             <div className="flex gap-2">
-              <Button color="blue" onClick={handleComplete}>
-                완료
-              </Button>
-              <Button color="green" onClick={handleEdit}>
-                수정
-              </Button>
-              <Button color="red" onClick={handleDelete}>
-                삭제
-              </Button>
+              <Button color="blue" onClick={handleComplete}>완료</Button>
+              <Button color="green" onClick={handleEdit}>수정</Button>
+              <Button color="red" onClick={handleDelete}>삭제</Button>
             </div>
           )}
         </div>
@@ -176,4 +137,4 @@ const WorkoutPlan = () => {
   );
 };
 
-export default WorkoutPlan;
+export default WorksoutPlan;
