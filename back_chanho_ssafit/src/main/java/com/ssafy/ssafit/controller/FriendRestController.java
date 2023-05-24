@@ -3,15 +3,14 @@ package com.ssafy.ssafit.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.ssafit.model.dto.Alarm;
 import com.ssafy.ssafit.model.dto.Friend;
-import com.ssafy.ssafit.model.service.AlarmService;
 import com.ssafy.ssafit.model.service.FriendService;
 
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +22,9 @@ public class FriendRestController {
 	private FriendService friendService;
 	
 	// 친구 신청
-	@ApiOperation(value="친구 신청")
+	@ApiOperation(value="친구 신청",response = Integer.class)
 	@PostMapping("/friend")
-	public ResponseEntity<Integer> register(Friend friend) {
+	public ResponseEntity<?> register(Friend friend) {
 		int result =friendService.registFriend(friend);
 		return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
 	}
@@ -52,6 +51,21 @@ public class FriendRestController {
 			return exceptionHandling(e);
 		}
 	}
+	
+	@DeleteMapping("/friend/{friendId}")
+	@ApiOperation(value="친구삭제",response = Integer.class)
+	public ResponseEntity<?> delete(@PathVariable int friendId) {
+		try {
+			int result = friendService.cutOffFriend(friendId);
+			return new ResponseEntity<Integer>(result, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	
+	
 	
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {

@@ -11,4 +11,6 @@ public interface FriendService {
 	public int registAlarm(Alarm alarm);
 	
 	public boolean isFriend(String userId, String friendUserId);
+	
+	public int cutOffFriend(int friendId);
 }
