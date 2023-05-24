@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.DiaryDao">
+<!-- 기록 전부 불러오기 -->
+<select id ="selectDiaryAll" resultType="Diary" parameterType="String">
+SELECT * FROM diary where userId=#{userId};
+</select>
+
+<!-- 기록 상세 보기 -->
+<select id="selectDiary" resultType="Diary" parameterType="int">
+select * from diary where diaryId=#{diaryId};
+</select>
+
+<!-- 기록 수정 -->
+<update id="updateDiary" parameterType="Diary">
+update diary SET part=#{part},weight=#{weight},reps=#{reps},exerciseSet=#{exerciseSet}, updateDate=now();
+</update>
+
+<!-- 기록 생성 -->
+<insert id="insertDiary" parameterType="Diary">
+  <!-- diary 테이블에 데이터 삽입 -->
+  INSERT INTO diary (part, diaryId, userId, weight, reps, exerciseSet, date, isDone)
+  VALUES (#{part},0, #{userId}, #{weight}, #{reps}, #{exerciseSet}, NOW(), 0);
+</insert>
+
+<!-- 기록 삭제 -->
+<delete id="deleteDiary" parameterType="int">
+  DELETE FROM diary WHERE diaryId = #{diaryId};
+</delete>
+
+</mapper>
