@@ -64,19 +64,6 @@ public class UserRestController {
 			return exceptionHandling(e);
 		}
 	}
-//	
-//	// 유저 정보 수정
-//	@PutMapping("/user/{id}")
-//	@ApiOperation(value = "사용자 정보를 수정한다.", response = Integer.class)
-//	public ResponseEntity<?> update(@RequestBody User user) {
-//		try {
-//			int result = userService.setUser(user);
-//			return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//
-//		} catch (Exception e) {
-//			return exceptionHandling(e);
-//		}
-//	}
 
 	// 회원가입
 	@PostMapping("/register")

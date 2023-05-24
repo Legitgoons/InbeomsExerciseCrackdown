@@ -5,8 +5,8 @@
 <mapper namespace="com.ssafy.ssafit.model.dao.UserDao">
 	<!-- 회원가입 -->
 <insert id="insertUser" parameterType="User">
-  INSERT INTO user (id, password, name, email, isAdmin)
-  VALUES (#{id}, #{password}, #{name}, #{email}, #{isAdmin})
+  INSERT INTO user (id, password, name, isAdmin)
+  VALUES (#{id}, #{password}, #{name}, #{isAdmin})
 </insert>
 
 	<!-- 유저 상세 보기  -->

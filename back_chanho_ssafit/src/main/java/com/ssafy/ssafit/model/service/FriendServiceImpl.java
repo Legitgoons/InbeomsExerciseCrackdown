@@ -55,4 +55,12 @@ public class FriendServiceImpl implements FriendService {
 		return friendDao.isFriend(userId, friendUserId);
 	}
 
+	@Override
+	@Transactional
+	public int cutOffFriend(int friendId) {		
+		return friendDao.deleteFriend(friendId);
+	}
+	
+	
+
 }
