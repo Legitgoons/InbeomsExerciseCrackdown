@@ -1,8 +1,18 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Navbar, Typography, Button } from "@material-tailwind/react";
+import { useSelector, useDispatch } from 'react-redux'; 
+import { logoutAction } from '..//..//redux/actions';
 
 const Header = () => {
+  const jwt = useSelector(state => state.auth.jwt);
+  console.log(jwt)
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(logoutAction());
+  }
+
   return (
     <div>
       <Navbar className="h-full md:h-auto mx-auto max-w-screen-xl px-4 py-2 mt-5">
@@ -17,16 +27,28 @@ const Header = () => {
             </Typography>
           </NavLink>
           <div className="lg:flex">
-            <NavLink to="/signIn">
-              <Button variant="text" size="sm" color="blue-gray">
-                로그인
-              </Button>
-            </NavLink>
-            <NavLink to="/signUp">
-              <Button variant="text" size="sm" >
-                회원가입
-              </Button>
-            </NavLink>
+            {
+              jwt 
+              ? (
+                <Button variant="text" size="sm" color="blue-gray" onClick={logout}>
+                  로그아웃
+                </Button>
+              )
+              : (
+                <>
+                  <NavLink to="/signIn">
+                    <Button variant="text" size="sm" color="blue-gray">
+                      로그인
+                    </Button>
+                  </NavLink>
+                  <NavLink to="/signUp">
+                    <Button variant="text" size="sm">
+                      회원가입
+                    </Button>
+                  </NavLink>
+                </>
+              )
+            }
           </div>
         </div>
       </Navbar>

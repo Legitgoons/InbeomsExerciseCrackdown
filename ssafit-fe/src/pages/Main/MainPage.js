@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
-import CalendarFrame from "../../components/Calendar/CalendarFrame";
+import Calendar from "../../components/Calendar/Calendar";
 
 const MainPage = () => {
   return (
@@ -9,7 +9,7 @@ const MainPage = () => {
       <div className="w-4/5 h-3/4 flex items-center justify-evenly mt-40">
         <div>
           <NavLink to="/calendar" className="mr-4">
-            <CalendarFrame />
+            <Calendar/>
           </NavLink>
         </div>
         <div className="flex flex-col">

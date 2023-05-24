@@ -1,9 +1,17 @@
 import React from "react";
 
-const WorksoutPlanVideo = () => {
+const WorksoutPlanVideo = ({ videoId }) => {
   return (
-    <div>
-      <h2>운동 이름 클릭시 Youtube api 가져와서 video</h2>
+    <div className="flex justify-center">
+      <iframe
+        width="560"
+        height="315"
+        src={`https://www.youtube.com/embed/${videoId}`}
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen>
+      </iframe>
     </div>
   );
 };

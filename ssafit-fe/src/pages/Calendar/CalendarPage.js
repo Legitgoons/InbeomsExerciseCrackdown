@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import CalendarFrame from "../../components/Calendar/CalendarFrame";
+import Calendar from "../../components/Calendar/Calendar";
 
 const CalendarPage = () => {
 
   return (
     <>
-      <CalendarFrame />
+      <Calendar/>
     </>
   );
 };

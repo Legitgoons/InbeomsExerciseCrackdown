@@ -2,6 +2,8 @@ import React from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { login } from '..//..//redux/actions';
 import {
   Card,
   Input,
@@ -11,17 +13,19 @@ import {
 
 const SignInForm = () => {
   const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch(); // login 액션 디스패치
   const navigate = useNavigate(); //useNavigate 가져옴
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:9999/api-user/login', data);
-      // 로그인 성공 시 처리 로직
-      console.log(response);
+      console.log(response.data["access-token"]); // access-token으로 변경
+      console.log(response.data); // access-token으로 변경
+      console.log(response); // access-token으로 변경
+      dispatch(login(response.data["access-token"])); // JWT를 스토어에 저장
       alert("로그인이 완료되었습니다.");
       navigate('/');
     } catch (error) {
-      // 로그인 실패 시 처리 로직
       console.error(error);
       alert("로그인에 실패했습니다.");
     }
