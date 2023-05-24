@@ -1,0 +1,139 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema ssafit
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema ssafit
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ssafit` DEFAULT CHARACTER SET utf8 ;
+USE `ssafit` ;
+
+-- -----------------------------------------------------
+-- Table `ssafit`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafit`.`user` (
+  `id` VARCHAR(30) NOT NULL,
+  `password` VARCHAR(500) NOT NULL,
+  `name` VARCHAR(30) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `isAdmin` TINYINT NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ssafit`.`diary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafit`.`diary` (
+  `diaryId` INT NOT NULL AUTO_INCREMENT,
+  `part` VARCHAR(10) NOT NULL,
+  `userId` VARCHAR(30) NOT NULL,
+  `weight` INT NOT NULL,
+  `reps` INT NOT NULL,
+  `exerciseSet` INT NOT NULL,
+  `updateDate` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `isDone` INT NOT NULL,
+  PRIMARY KEY (`diaryId`),
+  INDEX `userId_idx` (`userId` ASC) VISIBLE,
+  CONSTRAINT `fk_diary_userId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `ssafit`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ssafit`.`friend`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafit`.`friend` (
+  `friendId` INT NOT NULL AUTO_INCREMENT,
+  `userId` VARCHAR(30) NOT NULL,
+  `frienduserId` VARCHAR(30) NOT NULL,
+  `isAccept` INT NOT NULL DEFAULT '0',
+  PRIMARY KEY (`friendId`),
+  INDEX `userId_idx` (`userId` ASC) VISIBLE,
+  INDEX `frienduserId_idx` (`frienduserId` ASC) VISIBLE,
+  CONSTRAINT `fk_frienduserId`
+    FOREIGN KEY (`frienduserId`)
+    REFERENCES `ssafit`.`user` (`id`),
+  CONSTRAINT `fk_userId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `ssafit`.`user` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ssafit`.`alarm`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafit`.`alarm` (
+  `AlarmId` INT NOT NULL AUTO_INCREMENT,
+  `userId` VARCHAR(30) NOT NULL,
+  `alarmDate` DATETIME NOT NULL,
+  `diaryId` INT NULL DEFAULT NULL,
+  `friendId` INT NULL DEFAULT NULL,
+  `type` TINYINT NULL DEFAULT NULL,
+  `isCheck` TINYINT NULL DEFAULT NULL,
+  PRIMARY KEY (`AlarmId`),
+  INDEX `fk_alarm_userId_idx` (`userId` ASC) VISIBLE,
+  INDEX `fk_diaryId_idx` (`diaryId` ASC) VISIBLE,
+  INDEX `fk_friendId_idx` (`friendId` ASC) VISIBLE,
+  CONSTRAINT `fk_alarm_userId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `ssafit`.`user` (`id`),
+  CONSTRAINT `fk_diaryId`
+    FOREIGN KEY (`diaryId`)
+    REFERENCES `ssafit`.`diary` (`diaryId`),
+  CONSTRAINT `fk_friendId`
+    FOREIGN KEY (`friendId`)
+    REFERENCES `ssafit`.`friend` (`friendId`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ssafit`.`exercise`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafit`.`exercise` (
+  `exerciseId` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(50) NOT NULL,
+  `part` VARCHAR(10) NOT NULL,
+  `youtubeId` VARCHAR(100) NOT NULL,
+  `content` VARCHAR(500) NULL DEFAULT NULL,
+  PRIMARY KEY (`exerciseId`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ssafit`.`video`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ssafit`.`video` (
+  `title` VARCHAR(100) NOT NULL,
+  `part` VARCHAR(45) NOT NULL,
+  `youtubeId` VARCHAR(100) NOT NULL,
+  `channelName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`title`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
