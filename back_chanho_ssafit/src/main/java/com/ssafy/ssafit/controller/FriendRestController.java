@@ -66,6 +66,8 @@ public class FriendRestController {
 	
 	
 	
+	
+	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("오류가 발생했습니다: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

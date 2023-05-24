@@ -21,7 +21,7 @@
 	<select id="getFriendList" parameterType="String"
 		resultType="Friend">
 		SELECT friendId, userId, friendUserId, isAccept FROM Friend
-		WHERE userId = #{userId} AND isAccept = 1;
+		WHERE userId = #{userId} or friendUserId = #{friendUserId} AND isAccept = 1;
 	</select>
 	
 	<delete id="deleteFriend" parameterType="int">
