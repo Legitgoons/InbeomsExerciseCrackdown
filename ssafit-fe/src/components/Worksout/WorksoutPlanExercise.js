@@ -70,7 +70,7 @@ const WorksoutPlanExercise = ({ onExerciseSelect, selectedExercise }) => {
   };
 
   return (
-    <Tabs value="html" className="w-1/3">
+    <Tabs value="html" className="w-2/5">
       <TabsHeader
         className="bg-transparent"
         indicatorProps={{
@@ -94,7 +94,7 @@ const WorksoutPlanExercise = ({ onExerciseSelect, selectedExercise }) => {
               <Button
                 key={id}
                 onClick={() => handleExerciseClick(name)}
-                className="w-1/2"
+                className="w-1/3 mb-4"
               >
                 {name}
               </Button>

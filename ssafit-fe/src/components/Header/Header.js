@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-
 import { Navbar, Typography, Button } from "@material-tailwind/react";
 
 const Header = () => {
