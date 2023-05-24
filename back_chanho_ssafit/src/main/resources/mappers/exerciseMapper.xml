@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.ExerciseDao">
+<select id ="searchByTitle" parameterType="String"  resultType="Exercise">
+select * from Exercise where title=#{title};
+</select>
+<select id="selectExercise" parameterType="String" resultType="Exercise">
+select * from Exercise where youtubeId=#{youtubeId};
+</select>
+
+<select id="selectExerciseList" parameterType="String" resultType="Exercise">
+select * from Exercise where part=#{part} limit 5;
+</select>
+
+
+</mapper>
