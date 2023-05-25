@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { List, ListItem, Card, Button, Typography } from "@material-tailwind/react";
+import { List, ListItem, Card, Button } from "@material-tailwind/react";
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -12,7 +12,7 @@ const FriendsAlarm = () => {
       try {
         const response = await axios.get(`http://localhost:9999/api-friend/sendFriend/${userId}`);
         const fetchedFriends = await Promise.all(response.data.map(async friendData => {
-          const friendResponse = await axios.get(`http://localhost:9999/api-user/user/${friendData.friendUserId}`);
+          const friendResponse = await axios.get(`http://localhost:9999/api-user/user/${friendData.userId}`);
           return {
             id: friendData.friendId,
             name: friendResponse.data.name,
@@ -32,6 +32,7 @@ const FriendsAlarm = () => {
     try {
       await axios.put(`http://localhost:9999/api-friend/friend/accept/${friendId}`);
       setFriend(friend.filter(f => f.id !== friendId));
+      console.log(friendId)
     } catch (error) {
       console.error("Failed to accept friend request: ", error);
     }
@@ -74,18 +75,12 @@ const FriendsAlarm = () => {
   return (
     <Card className="p-4 w-96">
       <List className="space-y-2">
-      {friend.length === 0 ? (
-          <Typography as="a" variant="h6" className="mr-2 py-1.5 lg:ml-2">
-            새로운 알림이 없습니다.
-          </Typography>
-        ) : (
-        friend.map((friend) => (
+        {friend.map((friend) => (
           <ListItem key={friend.id} className="flex flex-col items-center justify-between">
             <span className="mb-2">{renderMessage(friend)}</span>
             {renderActionButtons(friend)}
           </ListItem>
-        ))
-      )}
+        ))}
       </List>
     </Card>
   );

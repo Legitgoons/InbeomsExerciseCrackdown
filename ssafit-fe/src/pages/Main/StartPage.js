@@ -8,14 +8,17 @@ const StartPage = () => {
   const timeout = () => {
     setTimeout(() => {
       navigate("/signIn");
-    }, 5000);
+    }, 3000);
   };
+
   useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight); // Add this line
     timeout();
     return () => {
       clearTimeout(timeout);
     };
-  });
+  }, []);
+
   return (
     <div className="h-screen">
       <div
@@ -27,9 +30,7 @@ const StartPage = () => {
         </h1>
         <Spinner className="h-12 w-12" />
       </div>
-      <div>
-        
-      </div>
+      <div></div>
     </div>
   );
 };

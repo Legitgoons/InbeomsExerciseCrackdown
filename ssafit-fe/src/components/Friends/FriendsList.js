@@ -17,7 +17,7 @@ const FriendsList = () => {
     const confirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (confirmed) {
       try {
-        await axios.delete(`http://localhost:9999/api-friend/friend/${friendUserId}/${userId}`);
+        await axios.delete(`http://localhost:9999/api-friend/friend/${userId}/${friendUserId}`);
         setFriends((prevFriends) =>
           prevFriends.filter((friend) => friend.id !== friendUserId)
         );
