@@ -10,6 +10,9 @@ public class Diary {
 	String updateDate;
 	String date;
 	int isDone;
+	public Diary() {
+		
+	}
 	
 	public Diary(int diaryId, String part, String userId, int weight, int reps, int exerciseSet, String updateDate, String date,
 			int isDone) {

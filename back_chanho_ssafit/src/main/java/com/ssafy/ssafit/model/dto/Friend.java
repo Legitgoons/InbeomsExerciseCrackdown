@@ -5,6 +5,10 @@ public class Friend {
 	String userId;
 	String friendUserId;
 	int isAccept;
+	
+	public Friend() {
+		
+	}
 	public Friend(int friendId, String userId, String friendUserId, int isAccept) {
 		super();
 		this.friendId = friendId;

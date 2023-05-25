@@ -59,8 +59,26 @@ public class FriendServiceImpl implements FriendService {
 
 	@Override
 	@Transactional
-	public int cutOffFriend(int friendId) {		
-		return friendDao.deleteFriend(friendId);
+	public int cutOffFriend(String userId, String friendUserId) {		
+		return friendDao.deleteFriend(userId,friendUserId);
+	}
+
+	
+	@Override
+	public List<Friend> sendFriendList(String userId) {
+		return friendDao.getSendList(userId);
+	}
+
+	@Override
+	@Transactional
+	public boolean checkFriendSend(String userId, String friendUserId) {
+		int count= friendDao.isFriendSend(userId, friendUserId); 
+		if(count>0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 
