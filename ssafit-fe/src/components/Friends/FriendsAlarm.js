@@ -21,7 +21,7 @@ const FriendsAlarm = () => {
         }));
         setFriend(fetchedFriends);
       } catch (error) {
-        console.error("Failed to fetch friends: ", error);
+        console.error(error);
       }
     };
 
@@ -35,6 +35,7 @@ const FriendsAlarm = () => {
       console.log(friendId)
     } catch (error) {
       console.error("Failed to accept friend request: ", error);
+      console.log(friendId)
     }
   };
 

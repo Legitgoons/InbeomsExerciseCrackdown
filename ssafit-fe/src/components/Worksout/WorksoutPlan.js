@@ -4,6 +4,7 @@ import WorksoutPlanExerciseTable from "./WorksoutPlanExerciseTable";
 import WorksoutPlanVideo from "./WorksoutPlanVideo";
 import { Button, Card, Input, Typography, } from "@material-tailwind/react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const WorksoutPlan = () => {
   const [selectedExercise, setSelectedExercise] = useState("운동 선택");
@@ -11,14 +12,21 @@ const WorksoutPlan = () => {
   const [exerciseReps, setExerciseReps] = useState(0);
   const [exerciseSet, setExerciseSet] = useState(0);
   const [fixedExercises, setFixedExercises] = useState([]); // 빈 배열로 초기화 -> 반복 가능
-  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+  const [isEditing, setIsEditing] = useState(true); // 수정 모드 여부
   const [videoId, setVideoId] = useState("");
+
+  const userId = useSelector((state) => state.auth.jwt.id);
 
   const handleExerciseSelection = (exerciseName) => {
     setSelectedExercise(exerciseName);
   };
 
   const worksoutChoiceHandler = () => {
+    if (!isEditing) {
+      alert("등록 완료 상태이기에 운동을 추가할 수 없습니다.");
+      return;
+    }
+
     if (selectedExercise === "운동 선택") {
       alert("운동을 선택해주세요");
       return;
@@ -53,7 +61,6 @@ const WorksoutPlan = () => {
         newFixedExercise,
       ]);
     }
-
     // 필드 초기화
     setSelectedExercise("운동 선택");
     setExerciseWeight(0);
@@ -61,23 +68,44 @@ const WorksoutPlan = () => {
     setExerciseSet(0);
   };
 
-  const handleEdit = () => {
+
+  const handleEdit = async () => {
     if (fixedExercises.length === 0) {
       alert("운동을 선택해주세요");
       return;
     }
+    // Axios를 이용하여 fixedExercises를 서버에 POST
+    for (const exercise of fixedExercises) {
+      try {
+        await axios.post('http://localhost:9999/api-diary/diary', {
+          exerciseSet: exercise.set,
+          isDone: 0,
+          diaryId: 0,
+          reps: exercise.reps,
+          title: exercise.name,
+          userId: userId,
+          weight: exercise.weight,
+          
+        });
+        console.log("성공")
+      } catch (error) {
+        console.error('Failed to post exercise:', error);
+      }
+    }
+
     setIsEditing(!isEditing);
   };
 
+
   const handleComplete = () => {
-    setIsEditing(false);
+    setIsEditing(true);
   };
 
   const handleDelete = () => {
     const confirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (confirmed) {
       setFixedExercises([]);
-      setIsEditing(false);
+      setIsEditing(true);
     }
   };
 
@@ -120,22 +148,31 @@ const WorksoutPlan = () => {
               color="blue"
               label="중량"
               value={exerciseWeight}
-              onChange={(e) => setExerciseWeight(e.target.value)}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setExerciseWeight(isNaN(value) ? 0 : value);
+              }}
             />
             <Input
               color="blue"
               label="횟수"
               value={exerciseReps}
-              onChange={(e) => setExerciseReps(e.target.value)}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setExerciseReps(isNaN(value) ? 0 : value);
+              }}
             />
             <Input
               color="blue"
               label="세트 수"
               value={exerciseSet}
-              onChange={(e) => setExerciseSet(e.target.value)}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setExerciseSet(isNaN(value) ? 0 : value);
+              }}
             />
             <Button color="gray" onClick={worksoutChoiceHandler}>
-              운동 선택
+              운동 등록
             </Button>
           </div>
         </div>
@@ -148,7 +185,7 @@ const WorksoutPlan = () => {
       <div className="flex w-96 flex-col gap-6">
         <WorksoutPlanExerciseTable fixedExercises={fixedExercises} />
         <div className="flex justify-evenly">
-          {!isEditing ? (
+          {isEditing ? (
             <Button onClick={handleEdit}>등록</Button>
           ) : (
             <div className="flex gap-2">
