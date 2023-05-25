@@ -8,9 +8,13 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import axios from "axios";
+import FriendsWorksoutPlan from "../Worksout/FriendsWorksoutPlan"
 
 const FriendsList = () => {
   const [friends, setFriends] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [selectedFriendId, setSelectedFriendId] = useState(null);
+  const [showWorksoutPlan, setShowWorksoutPlan] = useState(false);
   const userId = useSelector((state) => state.auth.jwt.id); // 사용자 ID를 스토어에서 가져옴
 
   const handleDelete = async (friendUserId) => {
@@ -33,7 +37,7 @@ const FriendsList = () => {
         const response = await axios.get(
           `http://localhost:9999/api-friend/friendList/${userId}`
         );
-        
+
         const friendsData = await Promise.all(
           response.data.map(async (friendId) => {
             const friendResponse = await axios.get(
@@ -55,31 +59,45 @@ const FriendsList = () => {
   }, [userId]); // 로그인된 사용자의 ID가 변경 -> 리랜더링
 
   return (
-    <Card className="p-4 w-96">
-      <List className="space-y-2">
-        {friends.length === 0 ? (
-          <Typography as="a" variant="h6" className="mr-2 py-1.5 lg:ml-2">
-            등록된 친구가 없습니다.
-          </Typography>
-        ) : (
-          friends.map((friend) => (
-            <ListItem
-              key={friend.id}
-              className="flex items-center justify-between"
-            >
-              <span>{friend.name}</span>
-              <Button
-                color="red"
-                size="sm"
-                onClick={() => handleDelete(friend.id)}
+    <div className="flex flex-col items-center">
+      <Card className="p-4 w-96">
+        <List className="space-y-2">
+          {friends.length === 0 ? (
+            <Typography as="a" variant="h6" className="mr-2 py-1.5 lg:ml-2">
+              등록된 친구가 없습니다.
+            </Typography>
+          ) : (
+            friends.map((friend) => (
+              <ListItem
+                key={friend.id}
+                className="flex items-center justify-between"
               >
-                삭제
-              </Button>
-            </ListItem>
-          ))
-        )}
-      </List>
-    </Card>
+                <span onClick={async () => {
+                  setSelectedFriendId(friend.id);
+                  setShowWorksoutPlan(!showWorksoutPlan);
+                  try {
+                    const response = await axios.get(
+                      `http://localhost:9999/api-user/user/${userId}`
+                    );
+                    setIsAdmin(response.data.isAdmin === 1);
+                  } catch (error) {
+                    console.error("Failed to get user information:", error);
+                  }
+                }}>{friend.name}</span>
+                <Button
+                  color="red"
+                  size="sm"
+                  onClick={() => handleDelete(friend.id)}
+                >
+                  삭제
+                </Button>
+              </ListItem>
+            ))
+          )}
+        </List>
+      </Card>
+      {showWorksoutPlan && <FriendsWorksoutPlan friendId={selectedFriendId} isAdmin={isAdmin} />}
+    </div>
   );
 };
 
