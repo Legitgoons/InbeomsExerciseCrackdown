@@ -1,21 +1,43 @@
 import React, { useState, useEffect } from "react";
 import WorksoutPlanExercise from "./WorksoutPlanExercise";
 import WorksoutPlanExerciseTable from "./WorksoutPlanExerciseTable";
-import WorksoutPlanVideo from "./WorksoutPlanVideo";
-import { Button, Card, Input, Typography, } from "@material-tailwind/react";
+import { Button, Input, Typography, } from "@material-tailwind/react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
-const WorksoutPlan = () => {
+const FriendsWorksoutPlan = ({ friendId, isAdmin }) => {
   const [selectedExercise, setSelectedExercise] = useState("운동 선택");
   const [exerciseWeight, setExerciseWeight] = useState(0);
   const [exerciseReps, setExerciseReps] = useState(0);
   const [exerciseSet, setExerciseSet] = useState(0);
   const [fixedExercises, setFixedExercises] = useState([]); // 빈 배열로 초기화 -> 반복 가능
-  const [isEditing, setIsEditing] = useState(true); // 수정 모드 여부
-  const [videoId, setVideoId] = useState("");
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
 
-  const userId = useSelector((state) => state.auth.jwt.id);
+  const userId = friendId;
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9999/api-diary/diaryList/${userId}`);
+        const fetchedExercises = response.data.map(exercise => {
+          return {
+            name: exercise.title,
+            weight: exercise.weight,
+            reps: exercise.reps,
+            set: exercise.exerciseSet
+          };
+        });
+
+        // fetchedExercises에 따라 fixedExercises와 isEditing 업데이트
+        setFixedExercises(fetchedExercises);
+        setIsEditing(fetchedExercises.length === 0);
+      } catch (error) {
+        console.error("Failed to fetch exercises: ", error);
+      }
+    };
+
+    fetchExercises();
+  }, [userId]);
+
 
   const handleExerciseSelection = (exerciseName) => {
     setSelectedExercise(exerciseName);
@@ -85,50 +107,58 @@ const WorksoutPlan = () => {
           title: exercise.name,
           userId: userId,
           weight: exercise.weight,
-          
         });
         console.log("성공")
       } catch (error) {
         console.error('Failed to post exercise:', error);
       }
     }
-
     setIsEditing(!isEditing);
   };
 
-
-  const handleComplete = () => {
-    setIsEditing(true);
-  };
-
-  const handleDelete = () => {
-    const confirmed = window.confirm("정말로 삭제하시겠습니까?");
+  const handleComplete = async () => {
+    const confirmed = window.confirm("정말로 완료하시겠습니까?");
     if (confirmed) {
+      for (const exercise of fixedExercises) {
+        try {
+          await axios.delete('http://localhost:9999/api-diary/diary', {
+            data: {
+              title: exercise.name,
+              userId: userId,
+            }
+          });
+          console.log(`운동 ${exercise.name}이(가) 삭제되었습니다.`);
+        } catch (error) {
+          console.error(`운동 ${exercise.name}의 삭제에 실패했습니다:`, error);
+        }
+      }
+
       setFixedExercises([]);
       setIsEditing(true);
     }
   };
 
-  const fetchVideo = async () => {
-    if (selectedExercise === "운동 선택") { // 기본값이면 video 랜더링 x
-      setVideoId(null);
-      return;
-    }
-
-    const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-      params: {
-        part: 'snippet',
-        maxResults: 1,
-        key: 'AIzaSyARG441jmA4xm90w2gIWYSGIXxg5d2aZd8', //youtube api 키
-        q: selectedExercise,
+  const handleDelete = async () => {
+    const confirmed = window.confirm("정말로 삭제하시겠습니까?");
+    if (confirmed) {
+      for (const exercise of fixedExercises) {
+        try {
+          await axios.delete('http://localhost:9999/api-diary/diary', {
+            data: {
+              title: exercise.name,
+              userId: userId,
+            }
+          });
+          console.log(`운동 ${exercise.name}이(가) 삭제되었습니다.`);
+        } catch (error) {
+          console.error(`운동 ${exercise.name}의 삭제에 실패했습니다:`, error);
+        }
       }
-    });
-    setVideoId(response.data.items[0].id.videoId);
-  };
 
-  useEffect(() => {
-    fetchVideo();
-  }, [selectedExercise]);
+      setFixedExercises([]);
+      setIsEditing(true);
+    }
+  };
 
   return (
     <div className="w-screen flex justify-evenly">
@@ -176,28 +206,25 @@ const WorksoutPlan = () => {
             </Button>
           </div>
         </div>
-        <div className="self-end w-3/4">
-          <Card className="h-80 mt-10 flex flex-col justify-evenly">
-            <WorksoutPlanVideo videoId={videoId} />
-          </Card>
-        </div>
       </div>
       <div className="flex w-96 flex-col gap-6">
         <WorksoutPlanExerciseTable fixedExercises={fixedExercises} />
         <div className="flex justify-evenly">
-          {isEditing ? (
-            <Button onClick={handleEdit}>등록</Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button color="blue" onClick={handleComplete}>완료</Button>
-              <Button color="green" onClick={handleEdit}>수정</Button>
-              <Button color="red" onClick={handleDelete}>삭제</Button>
-            </div>
-          )}
+          <div className="flex justify-evenly">
+            {isAdmin && (isEditing ? (
+              <Button onClick={handleEdit}>등록</Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button color="blue" onClick={handleComplete}>완료</Button>
+                <Button color="green" onClick={handleEdit}>수정</Button>
+                <Button color="red" onClick={handleDelete}>삭제</Button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default WorksoutPlan;
+export default FriendsWorksoutPlan;

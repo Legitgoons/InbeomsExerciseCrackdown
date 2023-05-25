@@ -1,28 +1,28 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Button } from "@material-tailwind/react";
-import CalendarFrame from "../../components/Calendar/CalendarFrame";
+import { Typography } from "@material-tailwind/react";
+import friends from "../../assets/friends.png";
+import exercise from "../../assets/exercise.png";
 
 const MainPage = () => {
   return (
     <div className="w-screen h-90vh flex justify-center">
       <div className="w-4/5 h-3/4 flex items-center justify-evenly mt-40">
-        <div>
-          <NavLink to="/calendar" className="mr-4">
-            <CalendarFrame />
+        <div className="flex flex-col items-center"> 
+          <NavLink to="/friends" className="mr-4">
+            <img src={friends} className="w-96 h-96" />
           </NavLink>
+          <Typography variant="h6" color="blue-gray" className="">
+            친구 구경 가기
+          </Typography>
         </div>
-        <div className="flex flex-col">
-          <NavLink to="/worksout" className="mr-2">
-            <Button variant="filled" size="lg" className="mr-2 mb-40">
-              운동하러가기
-            </Button>
+        <div className="flex flex-col items-center">
+          <NavLink to="/worksout" >
+            <img src={exercise} className="w-96 h-96" />
           </NavLink>
-          <NavLink to="/friends">
-            <Button variant="filled" size="lg">
-              친구보러가기
-            </Button>
-          </NavLink>
+          <Typography variant="h6" color="blue-gray" className="">
+            운동 계획 세우기
+          </Typography>
         </div>
       </div>
     </div>
