@@ -1,19 +1,50 @@
-import React, { useState } from "react";
-import { List, ListItem, Card, Button } from "@material-tailwind/react";
+import React, { useState, useEffect } from "react";
+import { List, ListItem, Card, Button, Typography } from "@material-tailwind/react";
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const FriendsAlarm = () => {
-  const [friend, setFriend] = useState([
-    {
-      id: "dd",
-      name: '이의찬',
-      type: 1, // 친구 신청 알림
-    },
-    {
-      id: "2",
-      name: '이경호',
-      type: 2, // 운동 계획 등록 알림
-    },
-  ]);
+  const [friend, setFriend] = useState([]);
+  const userId = useSelector((state) => state.auth.jwt.id);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9999/api-friend/sendFriend/${userId}`);
+        const fetchedFriends = await Promise.all(response.data.map(async friendData => {
+          const friendResponse = await axios.get(`http://localhost:9999/api-user/user/${friendData.friendUserId}`);
+          return {
+            id: friendData.friendId,
+            name: friendResponse.data.name,
+            type: 1,
+          };
+        }));
+        setFriend(fetchedFriends);
+      } catch (error) {
+        console.error("Failed to fetch friends: ", error);
+      }
+    };
+
+    fetchFriends();
+  }, [userId]);
+
+  const handleAccept = async (friendId) => {
+    try {
+      await axios.put(`http://localhost:9999/api-friend/friend/accept/${friendId}`);
+      setFriend(friend.filter(f => f.id !== friendId));
+    } catch (error) {
+      console.error("Failed to accept friend request: ", error);
+    }
+  };
+
+  const handleReject = async (friendId) => {
+    try {
+      await axios.put(`http://localhost:9999/api-friend/friend/reject/${friendId}`);
+      setFriend(friend.filter(f => f.id !== friendId));
+    } catch (error) {
+      console.error("Failed to reject friend request: ", error);
+    }
+  };
 
   const renderMessage = (friend) => {
     if (friend.type === 1) {
@@ -28,10 +59,10 @@ const FriendsAlarm = () => {
     if (friend.type === 1) {
       return (
         <div>
-          <Button className="mr-2" color="green" size="sm">
+          <Button className="mr-2" color="green" size="sm" onClick={() => handleAccept(friend.id)}>
             수락
           </Button>
-          <Button color="red" size="sm">
+          <Button color="red" size="sm" onClick={() => handleReject(friend.id)}>
             거절
           </Button>
         </div>
@@ -41,14 +72,20 @@ const FriendsAlarm = () => {
   };
 
   return (
-    <Card className="p-4 w-192">
+    <Card className="p-4 w-96">
       <List className="space-y-2">
-        {friend.map((friend) => (
+      {friend.length === 0 ? (
+          <Typography as="a" variant="h6" className="mr-2 py-1.5 lg:ml-2">
+            새로운 알림이 없습니다.
+          </Typography>
+        ) : (
+        friend.map((friend) => (
           <ListItem key={friend.id} className="flex flex-col items-center justify-between">
             <span className="mb-2">{renderMessage(friend)}</span>
             {renderActionButtons(friend)}
           </ListItem>
-        ))}
+        ))
+      )}
       </List>
     </Card>
   );

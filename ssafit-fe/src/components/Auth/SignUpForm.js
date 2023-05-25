@@ -25,7 +25,7 @@ const SignUpForm = () => {
       const requestData = { ...data, isAdmin: isAdmin ? 1 : 0 };
       await axios.post("http://localhost:9999/api-user/register", requestData);
       alert("회원가입이 완료되었습니다.");
-      navigate("/signin");
+      navigate("/signin",  { replace: true}); // 뒤로가기 막음
     } catch (error) {
       console.log(error);
       alert("회원가입에 실패했습니다.");
@@ -49,7 +49,8 @@ const SignUpForm = () => {
         </Typography>
         {errors.name && <small role="alert">{errors.name.message}</small>}
         {errors.id && <small role="alert">{errors.id.message}</small>}
-        {errors.password && (<small role="alert">{errors.password.message}</small>
+        {errors.password && (
+          <small role="alert">{errors.password.message}</small>
         )}
         <form
           className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"

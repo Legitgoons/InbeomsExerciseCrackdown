@@ -13,24 +13,29 @@ import {
 
 const SignInForm = () => {
   const { register, handleSubmit } = useForm();
-  const dispatch = useDispatch(); // login 액션 디스패치
-  const navigate = useNavigate(); //useNavigate 가져옴
+  const dispatch = useDispatch(); 
+  const navigate = useNavigate(); 
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:9999/api-user/login', data);
-      console.log(response.data["access-token"]); // access-token으로 변경
-      console.log(response.data); // access-token으로 변경
-      console.log(response); // access-token으로 변경
-      dispatch(login(response.data["access-token"])); // JWT를 스토어에 저장
+      const token = response.data["access-token"];
+      
+      // 내가 만든 쿠키~
+      const expires = new Date();
+      expires.setMinutes(expires.getMinutes() + 30); // 30분간 쿠키 유지
+      document.cookie = `token=${token};expires=${expires.toUTCString()};path=/`;
+      
+      console.log(response.data["access-token"]); 
+      dispatch(login(data.id, token)); 
       alert("로그인이 완료되었습니다.");
-      navigate('/');
+      navigate('/',  { replace: true}); 
     } catch (error) {
       console.error(error);
       alert("로그인에 실패했습니다.");
     }
   };
-
+  
   return (
     <Card color="transparent" shadow={false}>
       <Typography variant="h4" color="blue-gray">
@@ -44,7 +49,7 @@ const SignInForm = () => {
           <Input
             size="lg"
             label="아이디"
-            {...register("username", { required: true })}
+            {...register("id", { required: true })}
           />
           <Input
             type="password"

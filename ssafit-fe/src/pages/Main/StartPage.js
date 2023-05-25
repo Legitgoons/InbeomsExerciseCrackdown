@@ -7,7 +7,7 @@ const StartPage = () => {
   const navigate = useNavigate();
   const timeout = () => {
     setTimeout(() => {
-      navigate("/main");
+      navigate("/signIn");
     }, 5000);
   };
   useEffect(() => {
@@ -27,7 +27,7 @@ const StartPage = () => {
         </h1>
         <Spinner className="h-12 w-12" />
       </div>
-      <div className="">
+      <div>
         
       </div>
     </div>

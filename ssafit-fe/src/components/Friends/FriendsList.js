@@ -1,45 +1,83 @@
-import React, { useState } from "react";
-import { List, ListItem, Card, Button } from "@material-tailwind/react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import {
+  List,
+  ListItem,
+  Card,
+  Button,
+  Typography,
+} from "@material-tailwind/react";
+import axios from "axios";
 
 const FriendsList = () => {
-  const [friends, setFriends] = useState([
-    {
-      id: "dd",
-      name: "이의찬",
-    },
-    {
-      id: "2",
-      name: "이경호",
-    },
-  ]);
+  const [friends, setFriends] = useState([]);
+  const userId = useSelector((state) => state.auth.jwt.id); // 사용자 ID를 스토어에서 가져옴
 
-  const handleDelete = (id) => {
+  const handleDelete = async (friendUserId) => {
     const confirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (confirmed) {
-      setFriends((prevFriends) =>
-        prevFriends.filter((friend) => friend.id !== id)
-      );
+      try {
+        await axios.delete(`http://localhost:9999/api-friend/friend/${friendUserId}/${userId}`);
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend.id !== friendUserId)
+        );
+      } catch (error) {
+        console.error("Failed to delete friend: ", error);
+      }
     }
   };
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:9999/api-friend/friendList/${userId}`
+        );
+        
+        const friendsData = await Promise.all(
+          response.data.map(async (friendId) => {
+            const friendResponse = await axios.get(
+              `http://localhost:9999/api-user/user/${friendId}`
+            );
+            return {
+              id: friendResponse.data.id,
+              name: friendResponse.data.name,
+            };
+          })
+        );
+        setFriends(friendsData);
+      } catch (error) {
+        console.error("친구 목록을 가져오는 데 실패했습니다:", error);
+      }
+    };
+
+    fetchFriends();
+  }, [userId]); // 로그인된 사용자의 ID가 변경 -> 리랜더링
 
   return (
     <Card className="p-4 w-96">
       <List className="space-y-2">
-        {friends.map((friend) => (
-          <ListItem
-            key={friend.id}
-            className="flex items-center justify-between"
-          >
-            <span>{friend.name}</span>
-            <Button
-              color="red"
-              size="sm"
-              onClick={() => handleDelete(friend.id)}
+        {friends.length === 0 ? (
+          <Typography as="a" variant="h6" className="mr-2 py-1.5 lg:ml-2">
+            등록된 친구가 없습니다.
+          </Typography>
+        ) : (
+          friends.map((friend) => (
+            <ListItem
+              key={friend.id}
+              className="flex items-center justify-between"
             >
-              삭제
-            </Button>
-          </ListItem>
-        ))}
+              <span>{friend.name}</span>
+              <Button
+                color="red"
+                size="sm"
+                onClick={() => handleDelete(friend.id)}
+              >
+                삭제
+              </Button>
+            </ListItem>
+          ))
+        )}
       </List>
     </Card>
   );
