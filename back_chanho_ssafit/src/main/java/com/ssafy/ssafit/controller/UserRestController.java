@@ -10,14 +10,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.model.dto.User;
@@ -27,8 +24,7 @@ import com.ssafy.ssafit.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-// 아이디 찾기
-// 비밀번호 찾기
+
 
 @RestController
 @RequestMapping("/api-user")
@@ -68,31 +64,39 @@ public class UserRestController {
 	// 회원가입
 	@PostMapping("/register")
 	@ApiOperation(value = "회원가입.")
-	public ResponseEntity<Integer> register(User user) {
+	public ResponseEntity<Integer> register(@RequestBody User user) {
+		if(userService.readUser(user.getId())!=null) {
+			return new ResponseEntity<Integer>(HttpStatus.BAD_REQUEST);
+		}
+		else {
 		int result = userService.registUser(user);
 		return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
-	}
+	}}
 
 	// 로그인
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인.")
-	public ResponseEntity<Map<String, Object>> login(User user) {
+	public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		HttpStatus status = null;
 		User tryUser = userService.readUser(user.getId());
 		try {
-			if (user.getId() != null && user.getId().length() > 0 && tryUser !=null && tryUser.getPassword().equals(user.getPassword())&& user.getPassword().length()>0)  {
+			if (tryUser.getId().equals(user.getId())&&user.getId() != null && user.getId().length() > 0 && tryUser != null && tryUser.getPassword().equals(user.getPassword()) && user.getPassword().length() > 0 )  {
 				result.put("access-token", jwtUtil.createToken("id", user.getId(),user.getIsAdmin()));
 				status = HttpStatus.ACCEPTED;
-			}else {
-				status = HttpStatus.NO_CONTENT;
+			}
+			else {
+				status = HttpStatus.BAD_REQUEST;
 			}
 		} catch (UnsupportedEncodingException e) {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<Map<String,Object>>(result, status);
 	}
+	
+
+
 
 	// 로그아웃
 	@GetMapping("logout")

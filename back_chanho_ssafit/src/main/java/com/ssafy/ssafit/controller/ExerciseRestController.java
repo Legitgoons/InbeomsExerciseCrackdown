@@ -31,6 +31,20 @@ public class ExerciseRestController {
 		return exerciseService.getExerciseList(part);
 	}
 	
+	@ApiOperation(value = "운동 전부 불러오기.", response=Exercise.class)
+	@GetMapping("/exerciseAllList")
+	public ResponseEntity<?> exerciseAllList() {
+		try {
+			List<Exercise> exercises = exerciseService.getAllExercise();
+			if (exercises.size()>0) {
+				return new ResponseEntity<List<Exercise>>(exercises, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 	// 운동 선택
 	@GetMapping("/exercise/{youtubeId}")
 	@ApiOperation(value = "유튜브 아이디로 영상 찾기")

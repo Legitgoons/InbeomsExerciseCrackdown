@@ -29,11 +29,6 @@ public class UserServiceImpl implements UserService{
 		return userDao.selectUser(id);
 	}
 	
-//	@Override
-//	@Transactional
-//	public int setUser(User user) {
-//		return userDao.updateUser(user);
-//	}
 	@Override
 	public List<User> getUserList() {
 		return userDao.selectUserAll();

@@ -14,5 +14,9 @@ select * from Exercise where youtubeId=#{youtubeId};
 select * from Exercise where part=#{part} limit 5;
 </select>
 
+<select id="selectExerciseAll" resultType="Exercise">
+select * from Exercise;
+</select>
+
 
 </mapper>

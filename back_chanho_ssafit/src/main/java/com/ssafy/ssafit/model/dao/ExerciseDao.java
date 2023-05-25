@@ -12,6 +12,9 @@ public interface ExerciseDao {
 	public Exercise selectExercise(String youtubeId);
 	
 	// 제목으로 검색
-	List<Exercise> searchByTitle(String title);
+	public List<Exercise> searchByTitle(String title);
+	
+	// 운동 전부 가져오기
+	public List<Exercise> selectExerciseAll();
 
 }
