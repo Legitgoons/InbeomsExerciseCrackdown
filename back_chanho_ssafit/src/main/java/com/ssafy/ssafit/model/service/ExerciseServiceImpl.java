@@ -36,6 +36,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	public List<Exercise> searchByTitle(String title) {
 		return exerciseDao.searchByTitle(title);
 	}
+
+	// 운동 전체 불러오기
+	@Override
+	@Transactional
+	public List<Exercise> getAllExercise() {
+		return exerciseDao.selectExerciseAll();
+	}
 	
 
 

@@ -1,24 +1,19 @@
 package com.ssafy.ssafit.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.ssafit.model.dao.AlarmDao;
 import com.ssafy.ssafit.model.dao.FriendDao;
-import com.ssafy.ssafit.model.dto.Alarm;
 import com.ssafy.ssafit.model.dto.Friend;
 
 @Service
 public class FriendServiceImpl implements FriendService {
 	private FriendDao friendDao;
 
-	private AlarmDao alarmDao;
 
-	@Autowired
-	public void setAlarmRepo(AlarmDao alarmRepo) {
-		this.alarmDao = alarmRepo;
-	}
 
 	@Autowired
 	public void setFreindRepo(FriendDao friendRepo) {
@@ -43,23 +38,32 @@ public class FriendServiceImpl implements FriendService {
 		return friendDao.rejectFriend(friendId, 2);
 	}
 
-	@Override
-	public int registAlarm(Alarm alarm) {
-
-		return alarmDao.insertAlarm(alarm);
-	}
 
 	@Override
 	@Transactional
-	public boolean isFriend(String userId, String friendUserId) {
-		return friendDao.isFriend(userId, friendUserId);
+	public boolean checkFriend(String userId, String friendUserId) {
+		int count= friendDao.isFriend(userId, friendUserId); 
+		if(count>0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
+	
+    @Override
+    @Transactional
+    public List<Friend> getFriendList(String userId) {
+        return friendDao.getFriendList(userId);
+    }
 
 	@Override
 	@Transactional
 	public int cutOffFriend(int friendId) {		
 		return friendDao.deleteFriend(friendId);
 	}
+
+
 	
 	
 

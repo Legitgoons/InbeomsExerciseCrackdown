@@ -35,7 +35,6 @@ public class DiaryRestController {
 	@GetMapping("/diaryList/{userId}")
 	public ResponseEntity<?> list(@PathVariable String userId) {
 		List<Diary> list = diaryService.getDiaryList(userId);
-
 		if (list == null || list.size() == 0) {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
@@ -54,12 +53,12 @@ public class DiaryRestController {
 	// 기록 등록
 	@ApiOperation(value = "기록 등록")
 	@PostMapping("/diary")
-	public ResponseEntity<?> register(Diary diary, HttpSession session) {
+	public ResponseEntity<?> register(@RequestBody Diary diary, HttpSession session) {
 	    String nowId = (String) session.getAttribute("userId");
 	    int isAdmin = (int) session.getAttribute("isAdmin");
 
 	    try {
-	    	if (nowId != null && (nowId.equals(diary.getUserId()) || (isAdmin == 1 && friendService.isFriend(nowId, diary.getUserId())))) {
+	    	if (nowId != null && (nowId.equals(diary.getUserId()) || (isAdmin == 1 && friendService.checkFriend(nowId, diary.getUserId())))) {
 	            int result = diaryService.registDiary(diary);
 	            return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
 	        } else {
@@ -69,7 +68,6 @@ public class DiaryRestController {
 	        return exceptionHandling(e);
 	    }
 	}
-
 	
 	// 기록 수정
 	@ApiOperation(value = "기록 수정.")
@@ -78,7 +76,7 @@ public class DiaryRestController {
 	    String nowId = (String) session.getAttribute("userId");
 	    int isAdmin = (int) session.getAttribute("isAdmin");
 	    try {
-	    	if (nowId != null && (nowId.equals(diary.getUserId()) || (isAdmin == 1 && friendService.isFriend(nowId, diary.getUserId())))) {
+	    	if (nowId != null && (nowId.equals(diary.getUserId()) || (isAdmin == 1 && friendService.checkFriend(nowId, diary.getUserId())))) {
 	            int result = diaryService.setDiary(diary);
 	            return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	        } else {
@@ -96,9 +94,9 @@ public class DiaryRestController {
 	public ResponseEntity<?> delete(@PathVariable int diaryId, @RequestBody Diary diary, HttpSession session){
 		 String nowId = (String) session.getAttribute("userId");
 		    int isAdmin = (int) session.getAttribute("isAdmin");
-		    Diary selectedDiary = diaryService.readDiary(diaryId);
+		//    Diary selectedDiary = diaryService.readDiary(diaryId);
 		    try {
-		    	 if (nowId != null && (nowId.equals(diary.getUserId()) || (isAdmin == 1 && friendService.isFriend(nowId, diary.getUserId())))) {
+		    	 if (nowId != null && (nowId.equals(diary.getUserId()) || (isAdmin == 1 && friendService.checkFriend(nowId, diary.getUserId())))) {
 		    		int result = diaryService.removeDiary(diaryId);
 					if (result == 0)
 						throw new Exception();
@@ -111,19 +109,7 @@ public class DiaryRestController {
 		    }
 		}
 
-	// 친구 기록 목록
-//	@ApiOperation(value= "기록 목록")
-//	@GetMapping("/diaryList/{userId}")
-//	public ResponseEntity<?> friendList(@PathVariable String userId) {
-//		friendService.
-//		List<Diary> friendList = diaryService.getDiaryList(userId);
-//
-//		if (friendList != null || friendList.size() != 0) {
-//			return new ResponseEntity<List<Diary>>(friendList, HttpStatus.OK);
-//		}
-//		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-//
-//	}
+
 	
 	// 예외
 	private ResponseEntity<String> exceptionHandling(Exception e) {

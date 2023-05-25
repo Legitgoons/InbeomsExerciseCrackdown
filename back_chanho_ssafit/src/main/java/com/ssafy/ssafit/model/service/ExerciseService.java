@@ -13,6 +13,8 @@ public interface ExerciseService {
 	
 	// 영상 검색
 	public List<Exercise> searchByTitle(String title);
+
+	public List<Exercise> getAllExercise();
 	
 	
 	
