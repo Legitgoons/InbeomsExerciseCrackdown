@@ -9,7 +9,8 @@ public interface FriendService {
 	public int acceptFriend(int friendId,int isAccept);
 	public int rejectFriend(int friendId,int isAccept);	
 	public boolean checkFriend(String userId, String friendUserId);
-	public int cutOffFriend(int friendId);
+	public int cutOffFriend(String userId, String friendUserId);
 	public List<Friend> getFriendList(String userId);
-
+	public List<Friend> sendFriendList(String userId);
+	public boolean checkFriendSend(String userId, String friendUserId);
 }

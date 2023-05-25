@@ -99,7 +99,7 @@ public class UserRestController {
 
 
 	// 로그아웃
-	@GetMapping("logout")
+	@GetMapping("/logout")
 	@ApiOperation(value = "록아웃.")
 	public ResponseEntity<Void> logout(HttpSession session) {
 		session.invalidate();

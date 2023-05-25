@@ -20,9 +20,11 @@
 	</update>
 
 
-	<delete id="deleteFriend" parameterType="int">
+	<delete id="deleteFriend" parameterType="String">
 		DELETE from Friend WHERE
-		friendId=#{friendId};
+		(#{userId} = userId AND #{friendUserId} = friendUserId AND isAccept=1)
+		OR (#{userId} = friendUserId AND #{friendUserId} = userId AND
+		isAccept=1)
 	</delete>
 
 	<select id="getFriendList" resultType="Friend">
@@ -33,11 +35,25 @@
 		OR (#{userId} = friendUserId AND
 		isAccept = 1);
 	</select>
-	
+
+
+
 	<select id="isFriend" resultType="int">
-	SELECT count(*)
-	FROM Friend WHERE (#{userId} = userId AND #{friendUserId} = friendUserId AND isAccept=1) OR (#{userId} = friendUserId AND #{friendUserId} = userId AND isAccept=1)   
+		SELECT count(*)
+		FROM Friend WHERE (#{userId} = userId AND #{friendUserId} = friendUserId
+		AND isAccept=1) OR (#{userId} = friendUserId AND #{friendUserId} =
+		userId AND isAccept=1)
 	</select>
-	
+
+	<select id="getSendList" resultType="Friend">
+		SELECT * FROM Friend WHERE (#{userId}=friendUserId AND isAccept=0);
+	</select>
+
+	<select id="isFriendSend" resultType="int">
+		SELECT count(*)
+		FROM Friend WHERE (#{userId} = userId AND #{friendUserId} = friendUserId
+		AND isAccept=0) OR (#{userId} = friendUserId AND #{friendUserId} =
+		userId AND isAccept=0)
+	</select>
 
 </mapper>

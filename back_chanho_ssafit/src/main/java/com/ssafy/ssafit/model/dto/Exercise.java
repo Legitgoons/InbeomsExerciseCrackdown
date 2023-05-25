@@ -7,6 +7,9 @@ public class Exercise {
 	String title;
 	String content;
 	
+	public Exercise() {
+		
+	}
 	public Exercise(int exerciseId, String part, String youtubeId,String title,String content) {
 		super();
 		this.exerciseId = exerciseId;

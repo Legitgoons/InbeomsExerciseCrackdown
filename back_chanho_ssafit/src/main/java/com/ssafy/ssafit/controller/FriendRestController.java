@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.model.dto.Friend;
+import com.ssafy.ssafit.model.dto.User;
 import com.ssafy.ssafit.model.service.FriendService;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,8 +31,18 @@ public class FriendRestController {
 	@ApiOperation(value = "친구 신청", response = Integer.class)
 	@PostMapping("/friend")
 	public ResponseEntity<?> register(@RequestBody Friend friend) {
-		int result = friendService.registFriend(friend);
-		return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
+		// 이미 친구인 경우 400
+		if (friendService.checkFriend(friend.getUserId(), friend.getFriendUserId())) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+		// 친구 신청을 보낸 상태인 경우 401
+		else if (friendService.checkFriendSend(friend.getUserId(), friend.getFriendUserId())) {
+			return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+
+		} else {
+			int result = friendService.registFriend(friend);
+			return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
+		}
 	}
 
 	@ApiOperation(value = "친구 신청 승락")
@@ -58,11 +69,11 @@ public class FriendRestController {
 		}
 	}
 
-	@DeleteMapping("/friend/{friendId}")
+	@DeleteMapping("/friend/{userId}/{friendUserId}")
 	@ApiOperation(value = "친구삭제", response = Integer.class)
-	public ResponseEntity<?> delete(@PathVariable int friendId) {
+	public ResponseEntity<?> delete(@PathVariable String userId, @PathVariable String friendUserId) {
 		try {
-			int result = friendService.cutOffFriend(friendId);
+			int result = friendService.cutOffFriend(userId,friendUserId);
 			return new ResponseEntity<Integer>(result, HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -83,10 +94,9 @@ public class FriendRestController {
 					result.add(i.getUserId());
 				}
 			}
-			if(result.isEmpty()) {
+			if (result.isEmpty()) {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-			else {
+			} else {
 				return new ResponseEntity<List<String>>(result, HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -94,7 +104,23 @@ public class FriendRestController {
 		}
 	}
 
+	@GetMapping("/sendFriend/{userId}")
+	@ApiOperation(value = "친구 신청 보낸 사람 아이디 찾기")
+	public ResponseEntity<?> sendFriend(@PathVariable String userId) {
+		try {
+			List<Friend> friends = friendService.sendFriendList(userId);
+			List<Friend> sendResult = new LinkedList<>();
+			for (Friend i : friends) {
+				if (friends != null) {
+					sendResult.add(i);
+				}
+			}
+			return new ResponseEntity<List<Friend>>(sendResult, HttpStatus.OK);
 
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 
 	@ApiOperation(value = "친구 확인")
 	@GetMapping("/friend/{userId}/{friendUserId}")
