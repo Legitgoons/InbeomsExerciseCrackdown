@@ -15,19 +15,19 @@ select * from diary where diaryId=#{diaryId};
 
 <!-- 기록 수정 -->
 <update id="updateDiary" parameterType="Diary">
-update diary SET weight=#{weight},reps=#{reps},exerciseSet=#{exerciseSet} where userId=#{userId} AND title=#{title} AND isDone=0;
+update diary SET title=#{title},part=#{part},weight=#{weight},reps=#{reps},exerciseSet=#{exerciseSet} where diaryId=#{diaryId};
 </update>
 
 <!-- 기록 생성 -->
 <insert id="insertDiary" parameterType="Diary">
   <!-- diary 테이블에 데이터 삽입 -->
-  INSERT INTO diary (diaryId, userId,title,weight, reps, exerciseSet, isDone)
-  VALUES (0, #{userId}, #{title},#{weight}, #{reps}, #{exerciseSet}, 0);
+  INSERT INTO diary (part, diaryId, userId,title, weight, reps, exerciseSet, isDone)
+  VALUES (#{part},0, #{userId},#{title}, #{weight}, #{reps}, #{exerciseSet}, 0);
 </insert>
 
 <!-- 기록 삭제 -->
-<delete id="deleteDiary" parameterType="Diary">
-  DELETE FROM diary WHERE userId=#{userId} AND title=#{title};
+<delete id="deleteDiary" parameterType="int">
+  DELETE FROM diary WHERE diaryId = #{diaryId};
 </delete>
 
 </mapper>
