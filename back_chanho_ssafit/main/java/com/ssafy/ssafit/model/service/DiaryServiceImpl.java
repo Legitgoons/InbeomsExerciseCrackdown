@@ -41,8 +41,8 @@ public class DiaryServiceImpl implements DiaryService {
 	// 기록 삭제
 	@Override
 	@Transactional
-	public int removeDiary(Diary diary) {
-		return diaryDao.deleteDiary(diary);
+	public int removeDiary(int diaryId) {
+		return diaryDao.deleteDiary(diaryId);
 	}
 
 	// 기록 수정

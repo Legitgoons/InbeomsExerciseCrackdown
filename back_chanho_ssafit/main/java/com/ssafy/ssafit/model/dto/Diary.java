@@ -2,6 +2,7 @@ package com.ssafy.ssafit.model.dto;
 
 public class Diary {
 	int diaryId;
+	String part;
 	String userId;
 	String title;
 	int weight;
@@ -13,9 +14,11 @@ public class Diary {
 
 	}
 
-	public Diary(int diaryId, String userId, String title, int weight, int reps, int exerciseSet, int isDone) {
+	public Diary(int diaryId, String part, String userId, String title, int weight, int reps, int exerciseSet,
+			int isDone) {
 		super();
 		this.diaryId = diaryId;
+		this.part = part;
 		this.userId = userId;
 		this.title = title;
 		this.weight = weight;
@@ -32,6 +35,13 @@ public class Diary {
 		this.diaryId = diaryId;
 	}
 
+	public String getPart() {
+		return part;
+	}
+
+	public void setPart(String part) {
+		this.part = part;
+	}
 
 	public String getUserId() {
 		return userId;
@@ -73,8 +83,6 @@ public class Diary {
 		this.exerciseSet = exerciseSet;
 	}
 
-
-
 	public int getIsDone() {
 		return isDone;
 	}
@@ -85,9 +93,8 @@ public class Diary {
 
 	@Override
 	public String toString() {
-		return "Diary [diaryId=" + diaryId + ", userId=" + userId + ", title=" + title + ", weight=" + weight
-				+ ", reps=" + reps + ", exerciseSet=" + exerciseSet + ", isDone=" + isDone + "]";
+		return "Diary [diaryId=" + diaryId + ", part=" + part + ", userId=" + userId + ", title=" + title + ", weight="
+				+ weight + ", reps=" + reps + ", exerciseSet=" + exerciseSet + ", isDone=" + isDone + "]";
 	}
-
 
 }

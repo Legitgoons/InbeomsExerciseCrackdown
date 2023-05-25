@@ -6,7 +6,7 @@ import com.ssafy.ssafit.model.dto.Diary;
 
 public interface DiaryService {
 	public int registDiary(Diary diary);
-	public int removeDiary(Diary diary);
+	public int removeDiary(int diaryId);
 	public int setDiary(Diary diary);
 	public List<Diary> getDiaryList(String userId);
 	// 알람 상세

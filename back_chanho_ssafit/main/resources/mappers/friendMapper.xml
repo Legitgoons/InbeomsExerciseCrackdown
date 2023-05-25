@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.FriendDao">
+	<insert id="insertFriend" parameterType="Friend">
+		INSERT INTO Friend
+		(friendId,userId, friendUserId,isAccept)
+		VALUES (0,#{userId},
+		#{friendUserId},0);
+	</insert>
+
+	<update id="acceptFriend" parameterType="int">
+		update friend set
+		isAccept=1 where friendId=#{friendId};
+	</update>
+	<update id="rejectFriend" parameterType="int">
+		update friend set
+		isAccept=2 where friendId=#{friendId};
+	</update>
+
+
+	<delete id="deleteFriend" parameterType="String">
+		DELETE from Friend WHERE
+		(#{userId} = userId AND #{friendUserId} = friendUserId AND isAccept=1)
+		OR (#{userId} = friendUserId AND #{friendUserId} = userId AND
+		isAccept=1)
+	</delete>
+
+	<select id="getFriendList" resultType="Friend">
+		SELECT *
+		FROM Friend
+		WHERE
+		(#{userId} = userId AND isAccept = 1)
+		OR (#{userId} = friendUserId AND
+		isAccept = 1);
+	</select>
+
+
+
+	<select id="isFriend" resultType="int">
+		SELECT count(*)
+		FROM Friend WHERE (#{userId} = userId AND #{friendUserId} = friendUserId
+		AND isAccept=1) OR (#{userId} = friendUserId AND #{friendUserId} =
+		userId AND isAccept=1)
+	</select>
+
+	<select id="getSendList" resultType="Friend">
+		SELECT * FROM Friend WHERE (#{userId}=friendUserId AND isAccept=0);
+	</select>
+
+	<select id="isFriendSend" resultType="int">
+		SELECT count(*)
+		FROM Friend WHERE (#{userId} = userId AND #{friendUserId} = friendUserId
+		AND isAccept=0) OR (#{userId} = friendUserId AND #{friendUserId} =
+		userId AND isAccept=0)
+	</select>
+
+</mapper>

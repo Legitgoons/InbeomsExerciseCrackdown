@@ -15,7 +15,7 @@ public interface DiaryDao {
 	public int updateDiary(Diary diary);
 	
 	// 기록 삭제
-	public int deleteDiary(Diary diary);
+	public int deleteDiary(int diaryId);
 	
 	// 기록 생성
 	public int insertDiary(Diary diary);

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.AlarmDao">
+	<!-- 알람 삭제 -->
+	<delete id="deleteAlarm" parameterType="int">
+		delete * from Alarm where alarmId=#{alarmId}
+	</delete>
+	<!-- 알람 상세 -->
+	<select id="selectAlarm" parameterType="int" resultType="Diary">
+		select * from Alarm where alarmId=#{alarmId}
+	</select>
+
+	<update id="updateAlarm" parameterType="Alarm">
+		UPDATE alarm
+		set isCheck=#{isCheck} WHERE alarmId=#{alarmId}
+	</update>
+	<!-- 모든 알람 조회 -->
+	<select id="selectAlarmAll" resultType="Alarm"
+		parameterType="String">
+		SELECT * FROM alarm WHERE userId=#{userId}
+	</select>
+
+</mapper>
