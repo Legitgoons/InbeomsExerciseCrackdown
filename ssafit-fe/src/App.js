@@ -7,7 +7,6 @@ import StartPage from "./pages/Main/StartPage";
 import MainPage from "./pages/Main/MainPage";
 import NotFound from "./pages/NotFoundPage";
 import FriendsPage from "./pages/Main/FriendsPage";
-import DiaryPage from "./pages/Diary/DiaryPage";
 import WorksoutPage from "./pages/Worksout/WorksoutPage";
 import Header from "./components/Header/Header";
 
@@ -51,7 +50,6 @@ function App() {
         <Route path="/signin" element={<PublicComponent><LoginPage /></PublicComponent>} />
         <Route path="/signup" element={<PublicComponent><RegisterPage /></PublicComponent>} />
         <Route path="/friends/*" element={<ProtectedComponent><FriendsPage /></ProtectedComponent>} />
-        <Route path="/diary" element={<ProtectedComponent><DiaryPage /></ProtectedComponent>} />
         <Route path="/worksout/*" element={<ProtectedComponent><WorksoutPage /></ProtectedComponent>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
