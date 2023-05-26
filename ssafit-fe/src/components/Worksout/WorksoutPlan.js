@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import WorksoutPlanExercise from "./WorksoutPlanExercise";
 import WorksoutPlanExerciseTable from "./WorksoutPlanExerciseTable";
 import WorksoutPlanVideo from "./WorksoutPlanVideo";
-import { Button, Card, Input, Typography, } from "@material-tailwind/react";
+import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -20,6 +20,32 @@ const WorksoutPlan = () => {
   const handleExerciseSelection = (exerciseName) => {
     setSelectedExercise(exerciseName);
   };
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:9999/api-diary/diaryList/${userId}`
+        );
+        const fetchedExercises = response.data.map((exercise) => {
+          return {
+            name: exercise.title,
+            weight: exercise.weight,
+            reps: exercise.reps,
+            set: exercise.exerciseSet,
+          };
+        });
+
+        // fetchedExercises에 따라 fixedExercises와 isEditing 업데이트
+        setFixedExercises(fetchedExercises);
+        setIsEditing(fetchedExercises.length === 0);
+      } catch (error) {
+        console.error("Failed to fetch exercises: ", error);
+      }
+    };
+
+    fetchExercises();
+  }, [userId]);
 
   const worksoutChoiceHandler = () => {
     if (!isEditing) {
@@ -68,7 +94,6 @@ const WorksoutPlan = () => {
     setExerciseSet(0);
   };
 
-
   const handleEdit = async () => {
     if (fixedExercises.length === 0) {
       alert("운동을 선택해주세요");
@@ -77,7 +102,7 @@ const WorksoutPlan = () => {
     // Axios를 이용하여 fixedExercises를 서버에 POST
     for (const exercise of fixedExercises) {
       try {
-        await axios.post('http://localhost:9999/api-diary/diary', {
+        await axios.post("http://localhost:9999/api-diary/diary", {
           exerciseSet: exercise.set,
           isDone: 0,
           diaryId: 0,
@@ -85,28 +110,26 @@ const WorksoutPlan = () => {
           title: exercise.name,
           userId: userId,
           weight: exercise.weight,
-          
         });
-        console.log("성공")
+        console.log("성공");
       } catch (error) {
-        console.error('Failed to post exercise:', error);
+        console.error("Failed to post exercise:", error);
       }
     }
 
     setIsEditing(!isEditing);
   };
 
-
   const handleComplete = async () => {
     const confirmed = window.confirm("정말로 완료하시겠습니까?");
     if (confirmed) {
       for (const exercise of fixedExercises) {
         try {
-          await axios.delete('http://localhost:9999/api-diary/diary', {
+          await axios.delete("http://localhost:9999/api-diary/diary", {
             data: {
               title: exercise.name,
               userId: userId,
-            }
+            },
           });
           console.log(`운동 ${exercise.name}이(가) 삭제되었습니다.`);
         } catch (error) {
@@ -124,11 +147,11 @@ const WorksoutPlan = () => {
     if (confirmed) {
       for (const exercise of fixedExercises) {
         try {
-          await axios.delete('http://localhost:9999/api-diary/diary', {
+          await axios.delete("http://localhost:9999/api-diary/diary", {
             data: {
               title: exercise.name,
               userId: userId,
-            }
+            },
           });
           console.log(`운동 ${exercise.name}이(가) 삭제되었습니다.`);
         } catch (error) {
@@ -142,19 +165,23 @@ const WorksoutPlan = () => {
   };
 
   const fetchVideo = async () => {
-    if (selectedExercise === "운동 선택") { // 기본값이면 video 랜더링 x
+    if (selectedExercise === "운동 선택") {
+      // 기본값이면 video 랜더링 x
       setVideoId(null);
       return;
     }
 
-    const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-      params: {
-        part: 'snippet',
-        maxResults: 1,
-        key: 'AIzaSyARG441jmA4xm90w2gIWYSGIXxg5d2aZd8', //youtube api 키
-        q: selectedExercise,
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/search",
+      {
+        params: {
+          part: "snippet",
+          maxResults: 1,
+          key: "AIzaSyARG441jmA4xm90w2gIWYSGIXxg5d2aZd8", //youtube api 키
+          q: selectedExercise,
+        },
       }
-    });
+    );
     setVideoId(response.data.items[0].id.videoId);
   };
 
@@ -166,8 +193,7 @@ const WorksoutPlan = () => {
     <div className="w-screen flex justify-evenly">
       <div className="w-3/5 h-96 flex flex-col justify-between">
         <div className="flex justify-around">
-          <div className="flex flex-col">
-          </div>
+          <div className="flex flex-col"></div>
           <WorksoutPlanExercise
             onExerciseSelect={handleExerciseSelection}
             selectedExercise={selectedExercise}
@@ -221,9 +247,15 @@ const WorksoutPlan = () => {
             <Button onClick={handleEdit}>등록</Button>
           ) : (
             <div className="flex gap-2">
-              <Button color="blue" onClick={handleComplete}>완료</Button>
-              <Button color="green" onClick={handleEdit}>수정</Button>
-              <Button color="red" onClick={handleDelete}>삭제</Button>
+              <Button color="blue" onClick={handleComplete}>
+                완료
+              </Button>
+              <Button color="green" onClick={handleEdit}>
+                수정
+              </Button>
+              <Button color="red" onClick={handleDelete}>
+                삭제
+              </Button>
             </div>
           )}
         </div>
