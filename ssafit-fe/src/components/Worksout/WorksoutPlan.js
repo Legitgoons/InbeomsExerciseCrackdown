@@ -97,13 +97,45 @@ const WorksoutPlan = () => {
   };
 
 
-  const handleComplete = () => {
-    setIsEditing(true);
+  const handleComplete = async () => {
+    const confirmed = window.confirm("정말로 완료하시겠습니까?");
+    if (confirmed) {
+      for (const exercise of fixedExercises) {
+        try {
+          await axios.delete('http://localhost:9999/api-diary/diary', {
+            data: {
+              title: exercise.name,
+              userId: userId,
+            }
+          });
+          console.log(`운동 ${exercise.name}이(가) 삭제되었습니다.`);
+        } catch (error) {
+          console.error(`운동 ${exercise.name}의 삭제에 실패했습니다:`, error);
+        }
+      }
+
+      setFixedExercises([]);
+      setIsEditing(true);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const confirmed = window.confirm("정말로 삭제하시겠습니까?");
     if (confirmed) {
+      for (const exercise of fixedExercises) {
+        try {
+          await axios.delete('http://localhost:9999/api-diary/diary', {
+            data: {
+              title: exercise.name,
+              userId: userId,
+            }
+          });
+          console.log(`운동 ${exercise.name}이(가) 삭제되었습니다.`);
+        } catch (error) {
+          console.error(`운동 ${exercise.name}의 삭제에 실패했습니다:`, error);
+        }
+      }
+
       setFixedExercises([]);
       setIsEditing(true);
     }
